@@ -1,0 +1,13 @@
+1. Gameboard
+2. Blocks
+3. Input blocks into gameboard @ the top
+4. Have the blocks slide down after a short interval; drop on 1st dirty 
+   block we come into conact w/ on the drop 
+5. add a hold block 
+6. If a full row is full then shift everything down by 1
+7. If any block touches the top row after being placed then we drop
+8. List of upcoming blocks 
+9. Create some point system & timer system later
+10. Also add a front end 
+11. Add rotation to the blocks
+
