@@ -13,6 +13,7 @@ set(SOURCES
     src/game_board/game_board.c
     src/blocks/empty.c
     src/blocks/block.c
+    src/blocks/line.c
 )
 
 # Add an executable with the above sources

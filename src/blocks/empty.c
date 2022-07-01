@@ -11,6 +11,7 @@ empty_block *make_empty_block() {
     out->typ = EMPTY;
     out->dir = 0;
     out->dim = make_dimensions(1, 1);
-    printf("finished making empty block\n");
+    out->row_pos = 0;
+    out->col_pos = 0;
     return out;
 }

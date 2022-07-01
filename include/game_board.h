@@ -11,6 +11,8 @@ typedef struct game_board {
     int rows;
     int cols;
     block **board;
+    block *current_block;
+    block **next_blocks;
 } game_board;
 
 extern int points;

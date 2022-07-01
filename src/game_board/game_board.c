@@ -14,14 +14,18 @@ game_board *make_game_board() {
     gb->rows = ROWS;
     gb->cols = COLS;
 
-    printf("finished basic set up\n");
-
+    /* Malloc space for actual game board, and make each block empty */
     gb->board = (block **) malloc(sizeof(block) * ROWS);
     for (int i = 0; i < ROWS; i++) {
         *(gb->board + i) = malloc(sizeof(block) * COLS);
+
         for (int j = 0; j < COLS; j++) {
+            /* Make an empty block and write it to game_board */
             empty_block *e = make_block(EMPTY);
-            printf("empty_block->typ = %c\n", e->typ);
+            if (e == NULL) {
+                printf("Could not create the game_board\n");
+                exit(-1);
+            }
            *(*(gb->board + i) + j) = *e;
         }
     }

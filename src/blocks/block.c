@@ -1,15 +1,22 @@
 #include "../../include/empty.h"
+#include "../../include/line.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <float.h>
 #include <stdbool.h>
 
+/* Make a block of whatever TYP is passed in. Calls 
+ * the internal function associated with TYP.
+ */
 block *make_block(char typ) {
     switch (typ) {
         case EMPTY:
             empty_block *e = make_empty_block();
             return (block *)e;
+        case LINE:;
+            line_block *l = make_line_block();
+            return (block *)l;
 
         default:
             printf("invalid block type\n");
@@ -17,6 +24,7 @@ block *make_block(char typ) {
     return NULL;
 }
 
+/* Create the struct that holds the dimensions of this block */
 dimensions make_dimensions(int rows, int cols) {
     dimensions out;
     out.rows = rows;
