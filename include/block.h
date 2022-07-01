@@ -3,7 +3,7 @@
 
 /* Repr blocks w/ color */
 #define SQUARE 'Y' /* yellow */
-#define HAT  'P' /* purple */
+#define HAT    'P' /* purple */
 #define Z_LEFT 'R' /* red */
 #define Z_RIGHT 'G' /* green */
 #define LINE 'B' /* blue */
