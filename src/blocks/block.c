@@ -6,6 +6,12 @@
 #include <float.h>
 #include <stdbool.h>
 
+/* Generates a block of a random type */
+block *generate_random_block() {
+    block *out = (block *)make_block(EMPTY);
+    return out;
+}
+
 /* Make a block of whatever TYP is passed in. Calls 
  * the internal function associated with TYP.
  */

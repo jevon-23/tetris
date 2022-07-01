@@ -1,4 +1,5 @@
 #include "../../include/empty.h"
+#include "../../include/line.h"
 #include "../../include/game_board.h"
 #include "../../include/block.h"
 #include <stdio.h>
@@ -7,6 +8,17 @@
 #include <float.h>
 #include <stdbool.h>
 
+/* Place a block on the game board @ the top and in the middle. */
+bool place_block(game_board *board, block *blok, int row, int col) {
+    switch (blok->typ) {
+        case LINE:
+            return place_line_block(board, (line_block *)blok, row, col);
+        default:
+            printf("not a type of block that we can place\n");
+            exit(-1);
+    }
+    return false;
+}
 /* Generates the gameboard */
 game_board *make_game_board() {
 

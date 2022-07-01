@@ -6,6 +6,9 @@
 #include <float.h>
 #include <stdbool.h>
 
+void place_vertical_line_block(game_board *board, line_block *l, int row, int col);
+void place_horizontal_line_block(game_board *board, line_block *l, int row, int col);
+
 line_block *make_line_block() {
     line_block *out = (line_block *)malloc(sizeof(line_block));
     out->typ = LINE;
@@ -24,26 +27,26 @@ void rotate_line_block(line_block *blok) {
         (*blok).dim = make_dimensions(1, 4);
 }
 
-void draw_vertical_line_block(game_board *board, line_block *blok);
-void draw_horizontal_line_block(game_board *board, line_block *blok);
-
-// FIXME
-void draw_vertical_line_block(game_board *board, line_block *blok) {
+void place_vertical_line_block(game_board *board, line_block *l, int row, int col) {
+    for (int i = 0; i < l->dim.rows; i++) {
+        *(*(board->board + i + row) + col) = *l;
+    }
 }
 
-// FIXME
-void draw_horizontal_line_block(game_board *board, line_block *blok) {
+void place_horizontal_line_block(game_board *board, line_block *l, int row, int col) {
+
 }
 
-/* 
- * Draws a block to the game_board based on its direction to determine
- * how to draw 
- */
-void draw_line_block(game_board *board, line_block *blok) {
-    if  (blok->dir % 4 == 0 || blok->dir % 4 == 2)
-        draw_vertical_line_block(board, blok);
-    else
-        draw_horizontal_line_block(board, blok);
+bool place_line_block(game_board *board, line_block *l, int row, int col) {
+    if  (l->dir % 4 == 0 || l->dir % 4 == 2)
+        place_vertical_line_block(board, l, row, col);
+    else {
+        place_horizontal_line_block(board, l, row, col);
+    }
+
+    return true;
 }
+
+
 
 

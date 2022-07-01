@@ -1,4 +1,5 @@
 #include "../include/game_board.h"
+#include "../include/line.h"
 #include <float.h>
 #include <stdbool.h>
 #include <stdio.h>
@@ -20,6 +21,8 @@ int processCLI(int argc, char **argv, char **filename) {
 int main(int arg, char *argv[]) {
   /* Generate this games' board */
   game_board *board = make_game_board();
+  line_block *l = (line_block *)make_block(LINE);
+  place_block(board, (block *)l, 0, COLS/2);
   printf("made the game_board\n");
   print_game_board(board);
   printf("Successful build!\n");
