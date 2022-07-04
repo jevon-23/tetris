@@ -1,3 +1,4 @@
+#include <stdbool.h>
 #ifndef  BLOCK_H 
 #define  BLOCK_H 
 
@@ -11,6 +12,7 @@
 #define R_RIGHT 'O' /* orange */
 #define EMPTY '_' /* grey */
 
+
 /* Dimensions of a given block 
  * (can also be used for gameboard)
  */
@@ -18,6 +20,8 @@ typedef struct dimensions {
    int rows;
    int cols;
 } dimensions;
+
+typedef struct dimensions coords;
 
 /* Block struct */
 /* My first attempt at inheritance in c!
@@ -31,9 +35,11 @@ typedef struct dimensions {
 typedef struct block {
    char typ; /* Type of block we are dealing with */
    int dir; /* 0-3 */ 
-   dimensions dim; /* Dimensions of this block */
    int row_pos;  /* The row position that this block is @ while falling */
    int col_pos;
+   dimensions dim; /* Dimensions of this block */
+   coords group[4]; /* Group of blocks associated w/ this block */
+   bool active; /* If this block is the block that is in play */
 } block;
 
 /* Save rows and cols into one struct for easier packaging */
@@ -43,5 +49,6 @@ block *make_block(char typ);
 
 /* Generate a random block */
 block *generate_random_block();
+
 
 #endif

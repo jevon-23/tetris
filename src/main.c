@@ -21,10 +21,19 @@ int processCLI(int argc, char **argv, char **filename) {
 int main(int arg, char *argv[]) {
   /* Generate this games' board */
   game_board *board = make_game_board();
-  line_block *l = (line_block *)make_block(LINE);
-  place_block(board, (block *)l, 0, COLS/2);
   printf("made the game_board\n");
+  block *l = make_block(LINE);
+  place_block(board, l, 0, COLS/2);
   print_game_board(board);
+  rotate_block(board, l);
+  print_game_board(board);
+  block *next = move_block_down(board, (block *)l);
+  while (next != NULL) {
+    print_game_board(board);
+    next = move_block_down(board, next);
+
+
+  }
   printf("Successful build!\n");
   return 0;
 }

@@ -11,6 +11,18 @@ bool swap_empty_block(game_board *board, empty_block *e) {
     return false;
 }
 
+bool place_empty_block(game_board *board, empty_block *e, int row, int col) {
+
+    /* Make an empty block and write it to game_board */
+    if (e == NULL) {
+        printf("Could not create the game_board\n");
+        exit(-1);
+    }
+    *(*(board->board + row) + col) = *e;
+    free(e);
+    return true;
+}
+
 empty_block *make_empty_block() {
     empty_block *out = (empty_block *)malloc(sizeof(block));
     out->typ = EMPTY;

@@ -8,20 +8,75 @@
 #include <float.h>
 #include <stdbool.h>
 
-/* Place a block on the game board @ the top and in the middle. */
-bool place_block(game_board *board, block *blok, int row, int col) {
-    switch (blok->typ) {
+void rotate_block(game_board *board, block *b) {
+    switch (b->typ) {
         case LINE:
-            return place_line_block(board, (line_block *)blok, row, col);
+            rotate_line_block((line_block *)b);
+            break;
+
+        default:
+            printf("invalid block type to rotate \n");
+            exit(-1);
+    }
+
+}
+
+block *get_block(game_board *board, int row, int col) {
+    if (row < 0 || row >= ROWS || col < 0 || col >= COLS) {
+        return NULL;
+    }
+    return (*(board->board + row) + col);
+
+}
+void free_block_group(game_board *board, block *blok) {
+    /* First, change all of the blocks to empty blocks */
+    for (int i = 0; i < 4; i++) {
+        empty_block *e = (empty_block *)make_block(EMPTY);
+        *(*(board->board + blok->group[i].rows)+ blok->group[i].cols) =*e;
+        free(e);
+    }
+    free(blok);
+
+}
+
+/* Place a block on the game board @ the top and in the middle. */
+void place_block(game_board *board, block *blok, int row, int col) {
+    blok->row_pos = row;
+    blok->col_pos = col;
+    switch (blok->typ) {
+        case EMPTY:
+            place_empty_block(board, (empty_block *)blok, row, col);
+            break;
+        case LINE:
+            place_line_block(board, (line_block *)blok, row, col);
+            break;
         default:
             printf("not a type of block that we can place\n");
             exit(-1);
     }
-    return false;
+    blok->active = true;
+    return;
+}
+
+block *move_block_down(game_board *board, block *blok) {
+    /* Make sure that we are trying to move an active block */
+    if (!blok->active) {
+        printf("block is inactive: trying to move a block that is not moveable\n");
+        printf("block pos: (%d, %d)", blok->row_pos, blok->col_pos);
+        exit(-1);
+    }
+
+    switch (blok->typ) {
+        case LINE:
+            return move_line_block_down(board, (line_block *)blok);
+        default:
+            printf("not a type of block that we can place\n");
+            exit(-1);
+    }
+    return NULL;
 }
 /* Generates the gameboard */
 game_board *make_game_board() {
-
     game_board *gb = malloc(sizeof(game_board));
     gb->rows = ROWS;
     gb->cols = COLS;
@@ -34,11 +89,7 @@ game_board *make_game_board() {
         for (int j = 0; j < COLS; j++) {
             /* Make an empty block and write it to game_board */
             empty_block *e = make_block(EMPTY);
-            if (e == NULL) {
-                printf("Could not create the game_board\n");
-                exit(-1);
-            }
-           *(*(gb->board + i) + j) = *e;
+            place_block(gb, e, i, j);
         }
     }
     return gb;
@@ -55,6 +106,7 @@ void print_game_board(game_board *gb) {
         }
         printf("\n");
     }
+    printf("\n");
 
 }
 
