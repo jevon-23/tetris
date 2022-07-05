@@ -16,6 +16,7 @@ line_block *make_line_block() {
     return out;
 }
 
+/* Rotates the block in play, and places it on to the board */
 void rotate_line_block(game_board *board, line_block *blok) {
     (*blok).dir += 1;
     /* Even number => vertical block */
@@ -29,44 +30,16 @@ void rotate_line_block(game_board *board, line_block *blok) {
     place_block(board, blok, blok->row_pos, blok->col_pos);
 }
 
-block *move_vertical_line_block_down(game_board *board, line_block *l) {
-
-    /* Check to see if we can actually move this block down */
-    if (l->row_pos + 1 >= ROWS) {
-        return NULL;
-    }
-
-    /* Check for collision */
-    block *lower_block = get_block(board, l->row_pos+l->dim.rows, l->col_pos);
-    if (lower_block == NULL || lower_block->typ != EMPTY)
-        return NULL;
-    
-    /* Create a new line block, that is set 1 unit below current one */
-    line_block *new_block = make_line_block(LINE);
-
-    int new_row = l->row_pos + 1;
-    int new_col = l->col_pos;
-
-    /* Free previous block group */
-    free_block_group(board, (block *)l);
-
-    /* place the new block  */
-    place_block(board,new_block, new_row, new_col);
-
-    return new_block;
-}
-
-block *move_horizontal_line_block_down(game_board *board, line_block *l) {
-    /* Check to see if we can actually move this block down */
-    if (l->row_pos + 1 >= ROWS) {
-        return NULL;
-    }
-
+/* Move a line block down. First creates a new block and updates its fields,
+ * then removes the og block from the game board, and prints the new block
+ * to the board
+ */
+block *move_line_block_down(game_board *board, line_block *l) {
+    /* TODO: Can this functionality be used 4 all of the block types? */
     /* Check for collision */
     block *lower_block = get_block(board, l->row_pos+l->dim.rows, l->col_pos);
     if (lower_block == NULL || lower_block->typ != EMPTY) {
-        printf("row pos = %d ~ dim_rows = %d, col_pos = %d, dim_cols = %d\n", l->row_pos, l->dim.rows, l->col_pos, l->dim.cols);
-
+        return NULL;
     }
     
     /* Create a new line block, that is set 1 unit below current one */
@@ -86,21 +59,10 @@ block *move_horizontal_line_block_down(game_board *board, line_block *l) {
     return new_block;
 }
 
-block *move_line_block_down(game_board *board, line_block *l) {
-    if (l->dir % 4 == 0 || l->dir % 4 == 2)
-        return move_vertical_line_block_down(board, l);
-    else
-        return move_horizontal_line_block_down(board, l);
-    return NULL;
-}
 
 
+/* Places a vertical line block on the board */
 bool place_vertical_line_block(game_board *board, line_block *l, int row, int col) {
-    /* Check to see if we are placinga block out of bounds */
-    if ((row + l->dim.rows > ROWS || row < 0 ) || (col + l->dim.cols > COLS || col < 0)) {
-        return false;
-    }
-
     /* Place the block on the board, save the group coords to the block */
     for (int i = 0; i < l->dim.rows; i++) {
         /* Place the value on the board */
@@ -113,11 +75,8 @@ bool place_vertical_line_block(game_board *board, line_block *l, int row, int co
     return true;
 }
 
+/* Places a horizontal line block on the board */
 bool place_horizontal_line_block(game_board *board, line_block *l, int row, int col) {
-    /* Check to see if we are placinga block out of bounds */
-    if ((row + l->dim.rows > ROWS || row < 0 ) || (col + l->dim.cols > COLS || col < 0)) {
-        return false;
-    }
 
     /* Place the block on the board, save the group coords to the block */
     for (int i = 0; i < l->dim.cols; i++) {
@@ -133,6 +92,11 @@ bool place_horizontal_line_block(game_board *board, line_block *l, int row, int 
 }
 
 bool place_line_block(game_board *board, line_block *l, int row, int col) {
+    /* Check to see if we are placinga block out of bounds */
+    if ((row + l->dim.rows > ROWS || row < 0 ) || (col + l->dim.cols > COLS || col < 0)) 
+        return false;
+   
+    /* Place the block */
     if  (l->dir % 4 == 0 || l->dir % 4 == 2)
         place_vertical_line_block(board, l, row, col);
     else {
