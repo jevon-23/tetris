@@ -11,7 +11,7 @@
 void rotate_block(game_board *board, block *b) {
     switch (b->typ) {
         case LINE:
-            rotate_line_block((line_block *)b);
+            rotate_line_block(board, (line_block *)b);
             break;
 
         default:
@@ -28,13 +28,17 @@ block *get_block(game_board *board, int row, int col) {
     return (*(board->board + row) + col);
 
 }
-void free_block_group(game_board *board, block *blok) {
+void free_group(game_board *board, block *blok) {
     /* First, change all of the blocks to empty blocks */
     for (int i = 0; i < 4; i++) {
         empty_block *e = (empty_block *)make_block(EMPTY);
         *(*(board->board + blok->group[i].rows)+ blok->group[i].cols) =*e;
         free(e);
     }
+}
+
+void free_block_group(game_board *board, block *blok) {
+    free_group(board, blok);
     free(blok);
 
 }

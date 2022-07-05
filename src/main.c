@@ -25,10 +25,9 @@ int main(int arg, char *argv[]) {
   block *l = make_block(LINE);
   place_block(board, l, 0, COLS/2);
   print_game_board(board);
-  rotate_block(board, l);
-  print_game_board(board);
   block *next = move_block_down(board, (block *)l);
   while (next != NULL) {
+    rotate_block(board, next);
     print_game_board(board);
     next = move_block_down(board, next);
 
