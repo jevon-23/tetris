@@ -42,7 +42,7 @@ block *move_block_down(game_board *board, block *blok);
 block *move_block_right(game_board *game_board, block *blok);
 
 /* Move the current block in play to the left by 1 */
-block *move_block_left(char **game_board);
+block *move_block_left(game_board *game_board, block *blok);
 
 /* Make a new game board */
 game_board *make_game_board();

@@ -30,12 +30,22 @@ int main(int arg, char *argv[]) {
   block *next = move_block_down(board, (block *)l);
   print_game_board(board);
 
-  next = move_block_right(board, next);
+  next = move_block_left(board, next);
   print_game_board(board);
 
-  next = move_block_right(board, next);
+  next = move_block_left(board, next);
   print_game_board(board);
 
+  next = move_block_left(board, next);
+  print_game_board(board);
+
+  next = move_block_left(board, next);
+  print_game_board(board);
+
+  next = move_block_left(board, next);
+  print_game_board(board);
+  next = move_block_left(board, next);
+  print_game_board(board);
   while (next != NULL) {
     rotate_block(board, next);
     next = move_block_down(board, next);

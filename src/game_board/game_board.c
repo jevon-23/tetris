@@ -43,6 +43,15 @@ void free_block_group(game_board *board, block *blok) {
 
 }
 
+/* Make sure that we are trying to move an active block */
+void is_active(block *b) {
+    if (!b->active) {
+        printf("block is inactive: trying to move a block that is not moveable\n");
+        printf("block pos: (%d, %d)", b->row_pos, b->col_pos);
+        exit(-1);
+    }
+}
+
 /* Place a block on the game board @ the top and in the middle. */
 void place_block(game_board *board, block *blok, int row, int col) {
     blok->row_pos = row;
@@ -63,15 +72,24 @@ void place_block(game_board *board, block *blok, int row, int col) {
     return;
 }
 
-/* Make sure that we are trying to move an active block */
-void is_active(block *b) {
-    if (!b->active) {
-        printf("block is inactive: trying to move a block that is not moveable\n");
-        printf("block pos: (%d, %d)", b->row_pos, b->col_pos);
-        exit(-1);
+
+/* Move a block one unit to the right */
+block *move_block_left(game_board *board, block *blok) {
+    is_active(blok);
+
+    switch (blok->typ) {
+        case LINE:
+            return move_line_block(board, blok, blok->row_pos, blok->col_pos - 1);
+        default:
+            printf("not a type of block that we can move right\n");
+            exit(-1);
     }
+
+    return NULL;
+
 }
 
+/* Move a block one unit to the right */
 block *move_block_right(game_board *board, block *blok) {
     is_active(blok);
 
@@ -87,6 +105,7 @@ block *move_block_right(game_board *board, block *blok) {
 
 }
 
+/* Move a block one unit down */
 block *move_block_down(game_board *board, block *blok) {
     is_active(blok);
 
@@ -128,6 +147,7 @@ bool reset_game_board();
 /* Prints out the gameboard */
 void print_game_board(game_board *gb) {
     for (int row = 0; row < ROWS; row++) {
+        printf("|");
         for (int col = 0; col < COLS; col++) {
             printf("%c|", (*(gb->board + row) + col)->typ);
         }
