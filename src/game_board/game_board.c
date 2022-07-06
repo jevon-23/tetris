@@ -11,7 +11,7 @@
 void rotate_block(game_board *board, block *b) {
     switch (b->typ) {
         case LINE:
-            rotate_line_block(board, (line_block *)b);
+            rotate_line_block(board, (line_block *)b, true);
             break;
 
         default:
@@ -52,6 +52,7 @@ void place_block(game_board *board, block *blok, int row, int col) {
             place_empty_block(board, (empty_block *)blok, row, col);
             break;
         case LINE:
+            printf("place_block-?dir = %d\n", blok->dir);
             place_line_block(board, (line_block *)blok, row, col);
             break;
         default:
@@ -62,19 +63,41 @@ void place_block(game_board *board, block *blok, int row, int col) {
     return;
 }
 
-block *move_block_down(game_board *board, block *blok) {
-    /* Make sure that we are trying to move an active block */
-    if (!blok->active) {
+/* Make sure that we are trying to move an active block */
+void is_active(block *b) {
+    if (!b->active) {
         printf("block is inactive: trying to move a block that is not moveable\n");
-        printf("block pos: (%d, %d)", blok->row_pos, blok->col_pos);
+        printf("block pos: (%d, %d)", b->row_pos, b->col_pos);
         exit(-1);
     }
+}
+
+block *move_block_right(game_board *board, block *blok) {
+    is_active(blok);
 
     switch (blok->typ) {
         case LINE:
-            return move_line_block_down(board, (line_block *)blok);
+            return move_line_block(board, blok, blok->row_pos, blok->col_pos + 1);
         default:
-            printf("not a type of block that we can place\n");
+            printf("not a type of block that we can move right\n");
+            exit(-1);
+    }
+
+    return NULL;
+
+}
+
+block *move_block_down(game_board *board, block *blok) {
+    is_active(blok);
+
+    if (blok->row_pos + blok->dim.rows + 1 >= ROWS)
+        return NULL;
+
+    switch (blok->typ) {
+        case LINE:
+            return move_line_block(board, (line_block *)blok, blok->row_pos+1, blok->col_pos);
+        default:
+            printf("not a type of block that we can move down\n");
             exit(-1);
     }
     return NULL;

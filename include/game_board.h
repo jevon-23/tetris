@@ -39,10 +39,10 @@ void print_game_board(game_board *board);
 block *move_block_down(game_board *board, block *blok);
 
 /* Move the current block in play to the right by 1 */
-void move_block_right(char **game_board);
+block *move_block_right(game_board *game_board, block *blok);
 
 /* Move the current block in play to the left by 1 */
-void move_block_left(char **game_board);
+block *move_block_left(char **game_board);
 
 /* Make a new game board */
 game_board *make_game_board();

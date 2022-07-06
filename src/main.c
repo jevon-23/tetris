@@ -23,15 +23,23 @@ int main(int arg, char *argv[]) {
   game_board *board = make_game_board();
   printf("made the game_board\n");
   block *l = make_block(LINE);
+
   place_block(board, l, 0, COLS/2);
   print_game_board(board);
+
   block *next = move_block_down(board, (block *)l);
+  print_game_board(board);
+
+  next = move_block_right(board, next);
+  print_game_board(board);
+
+  next = move_block_right(board, next);
+  print_game_board(board);
+
   while (next != NULL) {
     rotate_block(board, next);
-    print_game_board(board);
     next = move_block_down(board, next);
-
-
+    print_game_board(board);
   }
   printf("Successful build!\n");
   return 0;

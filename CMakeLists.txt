@@ -7,6 +7,9 @@ cmake_minimum_required(VERSION 3.2)
 # Set the project name
 project (tetris)
 
+add_compile_options(-g)
+
+
 # Create a sources variable with a link to all cpp files to compile
 set(SOURCES
     src/main.c
