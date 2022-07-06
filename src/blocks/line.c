@@ -54,9 +54,9 @@ block *move_line_block(game_board *board, line_block *l, int row, int col) {
 
     int new_row = row;
     int new_col = col;
+    /* if we are @ a boundary, adjust */
     if (col < 0) new_col = 0;
     else if (col + l->dim.cols >= COLS) {
-        /* if we are @ a boundary, set us up right */
         new_col = COLS - l->dim.cols;
     }
 
@@ -88,11 +88,6 @@ bool place_vertical_line_block(game_board *board, line_block *l, int row, int co
 
 /* Places a horizontal line block on the board */
 bool place_horizontal_line_block(game_board *board, line_block *l, int row, int col) {
-    printf("l->dim = (%d, %d)\n", l->dim.rows, l->dim.cols);
-    if (l->dim.cols + col >= COLS) {
-        col = COLS - 4;
-        printf("hello ww\n");
-    }
     for (int i = 0; i < l->dim.cols; i++) {
         /* Place the value on the board */
         *(*(board->board + row) + col + i) = *l;
@@ -111,10 +106,7 @@ bool place_line_block(game_board *board, line_block *l, int row, int col) {
         col = COLS - l->dim.cols;
     if (col < 0 ) col = 0;
     if (row < 0) row = 0;
-    if (row + l->dim.rows > ROWS)
-        row = ROWS - l->dim.rows;
    
-    printf("place->dir = %d\n", l->dir);
     /* Place the block */
     if  (l->dir % 4 == 0 || l->dir % 4 == 2)
         place_vertical_line_block(board, l, row, col);

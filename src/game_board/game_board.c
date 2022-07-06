@@ -61,7 +61,6 @@ void place_block(game_board *board, block *blok, int row, int col) {
             place_empty_block(board, (empty_block *)blok, row, col);
             break;
         case LINE:
-            printf("place_block-?dir = %d\n", blok->dir);
             place_line_block(board, (line_block *)blok, row, col);
             break;
         default:
