@@ -6,6 +6,8 @@
 #include <float.h>
 #include <stdbool.h>
 
+block *move_line_block(game_board *board, line_block *l, int row, int col);
+
 line_block *make_line_block() {
     line_block *out = (line_block *)malloc(sizeof(line_block));
     out->typ = LINE;
@@ -13,6 +15,9 @@ line_block *make_line_block() {
     out->dim = make_dimensions(4, 1);
     out->row_pos = 0;
     out->col_pos = ROWS / 2;
+
+    /* Functions */
+    out->move_block = move_line_block;
     return out;
 }
 

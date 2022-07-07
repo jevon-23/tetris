@@ -76,15 +76,11 @@ void place_block(game_board *board, block *blok, int row, int col) {
 block *move_block_left(game_board *board, block *blok) {
     is_active(blok);
 
-    switch (blok->typ) {
-        case LINE:
-            return move_line_block(board, blok, blok->row_pos, blok->col_pos - 1);
-        default:
-            printf("not a type of block that we can move right\n");
-            exit(-1);
-    }
+    if (blok->col_pos + blok->dim.cols - 1 < 0)
+        return blok;
 
-    return NULL;
+    return blok->move_block(board, (line_block *)blok, blok->row_pos, blok->col_pos-1);
+
 
 }
 
@@ -92,15 +88,10 @@ block *move_block_left(game_board *board, block *blok) {
 block *move_block_right(game_board *board, block *blok) {
     is_active(blok);
 
-    switch (blok->typ) {
-        case LINE:
-            return move_line_block(board, blok, blok->row_pos, blok->col_pos + 1);
-        default:
-            printf("not a type of block that we can move right\n");
-            exit(-1);
-    }
+    if (blok->col_pos + blok->dim.cols + 1 > COLS)
+        return blok;
 
-    return NULL;
+    return blok->move_block(board, (line_block *)blok, blok->row_pos, blok->col_pos+1);
 
 }
 
@@ -108,17 +99,12 @@ block *move_block_right(game_board *board, block *blok) {
 block *move_block_down(game_board *board, block *blok) {
     is_active(blok);
 
+
     if (blok->row_pos + blok->dim.rows + 1 >= ROWS)
         return NULL;
 
-    switch (blok->typ) {
-        case LINE:
-            return move_line_block(board, (line_block *)blok, blok->row_pos+1, blok->col_pos);
-        default:
-            printf("not a type of block that we can move down\n");
-            exit(-1);
-    }
-    return NULL;
+    return blok->move_block(board, (line_block *)blok, blok->row_pos+1, blok->col_pos);
+
 }
 /* Generates the gameboard */
 game_board *make_game_board() {
