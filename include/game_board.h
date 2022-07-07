@@ -30,7 +30,7 @@ void free_group(game_board *board, block *blok);
 void free_block_group(game_board *board, block *blok);
 
 /* Place BLOK into coords (row, col) */
-void place_block(game_board *board, block *blok, int row, int col);
+bool place_block(game_board *board, block *blok, int row, int col);
 
 /* Print the game boards current state */
 void print_game_board(game_board *board);

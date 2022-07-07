@@ -7,6 +7,8 @@
 #include <stdbool.h>
 
 block *move_line_block(game_board *board, line_block *l, int row, int col);
+void rotate_line_block(game_board *board, line_block *blok, bool direct);
+bool place_line_block(game_board *board, line_block *l, int row, int col);
 
 line_block *make_line_block() {
     line_block *out = (line_block *)malloc(sizeof(line_block));
@@ -18,17 +20,37 @@ line_block *make_line_block() {
 
     /* Functions */
     out->move_block = move_line_block;
+    out->rotate_block = rotate_line_block;
+    out->place_block = place_line_block;
     return out;
 }
 
 /* Rotates the block in play, and places it on to the board */
 void rotate_line_block(game_board *board, line_block *blok, bool direct) {
+
     (*blok).dir += 1;
     /* Even number => vertical block */
     if  (blok->dir % 2 == 0) {
+        /* Check for collision */
+        for (int i = 1; i < 4; i++) {
+            block *b = get_block(board, blok->row_pos + i, blok->col_pos);
+            if (b == NULL) continue;
+            if (b->typ != EMPTY){
+              (*blok).dir -=1;
+              return;
+            } 
+        }
         (*blok).dim = make_dimensions(4, 1);
     }
     else {
+        for (int i = 1; i < 4; i++) {
+            block *b = get_block(board, blok->row_pos, blok->col_pos + i);
+            if (b == NULL) continue;
+            if (b->typ != EMPTY){
+              (*blok).dir -=1;
+              return;
+            } 
+        }
         (*blok).dim = make_dimensions(1, 4);
     }
     /* Free the old group of blocks */
@@ -45,13 +67,28 @@ void rotate_line_block(game_board *board, line_block *blok, bool direct) {
  * to the board
  */
 block *move_line_block(game_board *board, line_block *l, int row, int col) {
-    /* Check for collision */
-    for (int i = 0; i < l->dim.cols; i++) {
-      block *lower_block = get_block(board, l->row_pos+l->dim.rows, l->col_pos+i);
-      if (lower_block == NULL) continue;
-      if (lower_block->typ != EMPTY) {
-          return NULL;
+    if (row > l->row_pos) {
+
+      /* Check for collision below */
+      for (int i = 0; i < l->dim.cols; i++) {
+        block *lower_block = get_block(board, l->row_pos+l->dim.rows, l->col_pos+i);
+        if (lower_block == NULL) continue;
+        if (lower_block->typ != EMPTY) {
+            return NULL;
+        }
       }
+    }
+
+    /* Check for collision on sides */
+    if (col < l->col_pos) {
+     for (int i = 0; i < l->dim.rows; i++) {
+       block *lower_block = get_block(board, row+i, col);
+       if (lower_block == NULL) continue;
+       if (lower_block->typ != EMPTY) {
+           return NULL;
+       }
+
+     }
     }
     
     /* Create a new line block, that is set 1 unit below current one */
@@ -113,9 +150,19 @@ bool place_line_block(game_board *board, line_block *l, int row, int col) {
     if (row < 0) row = 0;
    
     /* Place the block */
-    if  (l->dir % 4 == 0 || l->dir % 4 == 2)
+    if  (l->dir % 4 == 0 || l->dir % 4 == 2) {
+        for(int i = 0; i < 4; i++) {
+            block *b = get_block(board, row + i, col);
+            if (b->typ != EMPTY) return false; 
+        }
+
         place_vertical_line_block(board, l, row, col);
+    }
     else {
+        for(int i = 0; i < 4; i++) {
+            block *b = get_block(board, row, col + i);
+            if (b->typ != EMPTY) return false; 
+        }
         place_horizontal_line_block(board, l, row, col);
     }
 

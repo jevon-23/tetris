@@ -7,6 +7,7 @@
 #include <float.h>
 #include <stdbool.h>
 
+bool place_empty_block(game_board *board, empty_block *e, int row, int col);
 bool swap_empty_block(game_board *board, empty_block *e) {
     return false;
 }
@@ -18,6 +19,8 @@ bool place_empty_block(game_board *board, empty_block *e, int row, int col) {
         printf("Could not create the game_board\n");
         exit(-1);
     }
+    e->row_pos = row;
+    e->col_pos = col;
     *(*(board->board + row) + col) = *e;
     free(e);
     return true;
@@ -30,5 +33,8 @@ empty_block *make_empty_block() {
     out->dim = make_dimensions(1, 1);
     out->row_pos = 0;
     out->col_pos = 0;
+
+    /* Functions */
+    out->place_block = place_empty_block;
     return out;
 }

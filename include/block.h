@@ -43,6 +43,8 @@ typedef struct block {
    coords group[4]; /* Group of blocks associated w/ this block */
    bool active; /* If this block is the block that is in play */
    struct block* (*move_block)(struct game_board *game_board, struct block *b, int row, int col);
+   void (*rotate_block)(struct game_board *game_board, struct block *b, bool direct);
+   bool (*place_block)(struct game_board *game_board, struct block *b, int row, int col);
 } block;
 
 /* Save rows and cols into one struct for easier packaging */

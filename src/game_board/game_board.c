@@ -9,15 +9,11 @@
 #include <stdbool.h>
 
 void rotate_block(game_board *board, block *b) {
-    switch (b->typ) {
-        case LINE:
-            rotate_line_block(board, (line_block *)b, true);
-            break;
-
-        default:
-            printf("invalid block type to rotate \n");
-            exit(-1);
+    if (b->typ == EMPTY) {
+      printf("invalid block type to rotate \n");
+      exit(-1);
     }
+    b->rotate_block(board, b, true);
 
 }
 
@@ -32,8 +28,7 @@ void free_group(game_board *board, block *blok) {
     /* First, change all of the blocks to empty blocks */
     for (int i = 0; i < 4; i++) {
         empty_block *e = (empty_block *)make_block(EMPTY);
-        *(*(board->board + blok->group[i].rows)+ blok->group[i].cols) =*e;
-        free(e);
+        place_block(board, e, blok->group[i].rows, blok->group[i].cols);
     }
 }
 
@@ -53,22 +48,12 @@ void is_active(block *b) {
 }
 
 /* Place a block on the game board @ the top and in the middle. */
-void place_block(game_board *board, block *blok, int row, int col) {
+bool place_block(game_board *board, block *blok, int row, int col) {
     blok->row_pos = row;
     blok->col_pos = col;
-    switch (blok->typ) {
-        case EMPTY:
-            place_empty_block(board, (empty_block *)blok, row, col);
-            break;
-        case LINE:
-            place_line_block(board, (line_block *)blok, row, col);
-            break;
-        default:
-            printf("not a type of block that we can place\n");
-            exit(-1);
-    }
+    bool out = blok->place_block(board, blok, row, col);
     blok->active = true;
-    return;
+    return out;
 }
 
 
@@ -79,7 +64,7 @@ block *move_block_left(game_board *board, block *blok) {
     if (blok->col_pos + blok->dim.cols - 1 < 0)
         return blok;
 
-    return blok->move_block(board, (line_block *)blok, blok->row_pos, blok->col_pos-1);
+    return blok->move_block(board, blok, blok->row_pos, blok->col_pos-1);
 
 
 }
@@ -88,10 +73,11 @@ block *move_block_left(game_board *board, block *blok) {
 block *move_block_right(game_board *board, block *blok) {
     is_active(blok);
 
+    /* If we are at a boundary, just return the block */
     if (blok->col_pos + blok->dim.cols + 1 > COLS)
         return blok;
 
-    return blok->move_block(board, (line_block *)blok, blok->row_pos, blok->col_pos+1);
+    return blok->move_block(board, blok, blok->row_pos, blok->col_pos+1);
 
 }
 
@@ -100,10 +86,10 @@ block *move_block_down(game_board *board, block *blok) {
     is_active(blok);
 
 
-    if (blok->row_pos + blok->dim.rows + 1 >= ROWS)
+    if (blok->row_pos + blok->dim.rows + 1 > ROWS)
         return NULL;
 
-    return blok->move_block(board, (line_block *)blok, blok->row_pos+1, blok->col_pos);
+    return blok->move_block(board, blok, blok->row_pos+1, blok->col_pos);
 
 }
 /* Generates the gameboard */
