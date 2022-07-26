@@ -23,7 +23,7 @@ int main(int arg, char *argv[]) {
   /* Generate this games' board */
   game_board *board = make_game_board();
   printf("made the game_board\n");
-  block *next = make_block(SQUARE);
+  block *next = make_block(LINE);
   block *prev = malloc(sizeof(block));
   *prev = *next;
 
@@ -92,7 +92,6 @@ int main(int arg, char *argv[]) {
       SDL_Delay(100);
     }
   prev->active = false;
-
   next = make_block(LINE);
   if (place_block(board, next, 0, COLS/2) == false)
       break;

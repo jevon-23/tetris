@@ -51,16 +51,18 @@ void rotate_line_block(game_board *board, line_block *blok, bool direct) {
         return;
       }
     }
+    (*blok).dim = make_dimensions(1, 4);
+  }
+  if (direct) {
+    /* Free the old group of blocks */
+    free_group(board, blok);
 
-    if (direct) {
-      /* Free the old group of blocks */
-      free_group(board, blok);
+    /* Place the updated block based on position */
+    place_block(board, blok, blok->row_pos, blok->col_pos);
 
-      /* Place the updated block based on position */
-      place_block(board, blok, blok->row_pos, blok->col_pos);
-
-    }
+  }
 }
+
 
 /* Move a line block down. First creates a new block and updates its fields,
  * then removes the og block from the game board, and prints the new block
@@ -104,12 +106,9 @@ block *move_line_block(game_board *board, line_block *l, int row, int col) {
     new_col = COLS - l->dim.cols;
   }
   printf("wtf\n");
-  /* Free previous block group */
-  free_block_group(board, (block *)l);
     
   for (; new_block->dir != l->dir % 2;
-       rotate_line_block(board, new_block, false))
-    ;
+       rotate_line_block(board, new_block, false));
 
   /* Free previous block group */
   free_block_group(board, (block *)l);
