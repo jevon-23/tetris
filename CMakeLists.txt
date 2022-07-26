@@ -21,6 +21,7 @@ set(SOURCES
     src/blocks/empty.c
     src/blocks/block.c
     src/blocks/line.c
+    src/blocks/square.c
     src/screen/screen.c
 )
 
